@@ -1,0 +1,1590 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+
+
+    <title>Home | The Lumine Project</title>
+
+    
+
+    <meta name="description" content="Lumine: A lightweight Linux desktop based on Debian 12, designed for gamers and Windows switchers.">
+
+
+
+    <link rel="stylesheet" href="./assets/style.css">
+
+    <link rel="icon" href="./assets/images/favicon.png">
+
+
+
+    <style>
+	
+	html {
+    scroll-behavior: smooth;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    display: flex;       /* Activates Flexbox */
+    align-items: center; /* Vertically centers everything (Top to Bottom) */
+    padding: 1rem 5%;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    background: transparent;
+}
+
+/* This ensures the links slide out of existence instead of just flickering */
+.nav-links a {
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.hide-link {
+    opacity: 0 !important;
+    width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    pointer-events: none !important;
+    transform: translateX(10px);
+}
+
+/* Glass effect when scrolling */
+nav.scrolled {
+    background: rgba(30, 30, 46, 0.7);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-bottom: 1px solid rgba(203, 166, 247, 0.1);
+    padding: 0.6rem 5%; /* Shrinks for a "docked" feel */
+}
+
+/* This is the base state (TOP OF PAGE) */
+/* Ensure the logo is GONE by default at the top of the page */
+#navLogo:not(.visible) {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transform: translateY(10px) !important;
+    pointer-events: none !important;
+}
+
+/* Base style for when it IS visible */
+#navLogo {
+    display: flex;
+    align-items: center;
+    color: var(--accent);
+    font-weight: 800;
+    font-size: 1.6rem;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    text-shadow: 0 0 15px rgba(203, 166, 247, 0.6);
+}
+
+#navLogo.visible {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateY(0) !important;
+    pointer-events: auto !important;
+}
+
+#live-indicator {
+    animation: blink-live 1.5s infinite;
+}
+
+@keyframes blink-live {
+    0% { opacity: 0.2; }
+    50% { opacity: 1; }
+    100% { opacity: 0.2; }
+}
+
+.stats-row {
+    display: flex;
+    flex-direction: row; /* Forces horizontal layout */
+    gap: 20px;
+    justify-content: center;
+    align-items: stretch;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.stat-card {
+    flex: 1; /* Makes both cards equal width */
+    background: var(--accent-bg);
+    border: 1px solid rgba(166, 227, 161, 0.3);
+    border-radius: 20px;
+    padding: 30px;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.stat-card.kofi-theme {
+    border-color: rgba(250, 179, 135, 0.3);
+    background: linear-gradient(180deg, var(--accent-bg), #2d201a);
+}
+
+.stat-card h3 {
+    font-size: 1rem;
+    color: var(--subtext);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 10px 0;
+}
+
+.stat-card span {
+    display: block;
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--text);
+}
+
+/* Responsive Fix: Stack only on mobile */
+@media (max-width: 600px) {
+    .stats-row {
+        flex-direction: column;
+        align-items: center;
+    }
+    .stat-card {
+        width: 100%;
+    }
+}
+
+/* --- INDEX.HTML SPECIFIC LOGO STATE --- */
+.plain-logo-trigger {
+    display: flex !important;
+    align-items: center !important;
+    background: none !important;
+    border: none !important;
+    color: var(--accent) !important;
+    font-weight: 800 !important;
+    font-size: 1.6rem !important;
+    
+    /* THE HIDDEN STATE */
+    opacity: 0; 
+    transform: translateY(10px); /* Slight slide up effect when appearing */
+    pointer-events: none; /* Can't click it while hidden */
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    
+    text-shadow: 0 0 15px rgba(203, 166, 247, 0.3);
+}
+
+/* THE VISIBLE STATE (Triggered by JS) */
+.plain-logo-trigger.visible {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+    pointer-events: auto !important;
+}
+
+/* Optional: Add a subtle glow to the text */
+.plain-logo-trigger span {
+    text-shadow: 0 0 15px rgba(203, 166, 247, 0.3);
+}
+
+/* --- THE NAVIGATION LINKS (RIGHT) --- */
+.nav-links {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.nav-logo img {
+    height: 30px;              /* Adjust this based on your nav padding */
+    width: auto;
+    display: block;
+}
+
+/* Base style for nav links (Home, Specs, etc) */
+.nav-links a {
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.85rem;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+}
+
+.site-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Vertical centering */
+    padding: 60px 40px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    margin-top: 80px;
+    background: rgba(30, 30, 46, 0.2);
+}
+
+.footer-left, .footer-right {
+    display: flex;
+    align-items: center; /* This aligns the GitHub icon and RAVeN logo perfectly on their center axis */
+    gap: 15px;           /* Gives them just enough breathing room */
+    justify-content: center; /* Keeps the signature block centered above the text */
+    margin-bottom: 20px;    /* Adds space before the text starts */
+}
+
+.footer-center {
+    flex: 2; /* Takes up more space to keep text lines long */
+    text-align: center;
+}
+
+.footer-center p, .footer-center address {
+    margin: 5px 0;
+    color: #bac2de;
+}
+
+.legal-text {
+    opacity: 0.5;
+    margin-top: 15px !important;
+}
+
+/* Side Logos Styling */
+.github-icon-link svg {
+    width: 28px;
+    fill: #ffffff;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+#ravenLogoFooter {
+    height: 22px; /* Your desired small size */
+    width: auto;
+    filter: brightness(0) invert(1); /* Ensures the logo matches the white GitHub icon perfectly */
+    opacity: 0.8;
+}
+
+.github-icon-link:hover svg, #ravenLogoFooter:hover {
+    opacity: 1;
+}
+
+/* Mobile Fix: Stack them when screen is narrow */
+@media (max-width: 768px) {
+    .site-footer {
+        flex-direction: column;
+        gap: 30px;
+        text-align: center;
+    }
+    .footer-left {
+        justify-content: center;
+    }
+}
+
+/* --- THE GLOWING ENGINE --- */
+@keyframes glow-pulse {
+    from {
+        text-shadow: 0 0 10px rgba(203, 166, 247, 0.4);
+    }
+    to {
+        text-shadow: 0 0 20px rgba(203, 166, 247, 0.8), 
+                     0 0 30px rgba(203, 166, 247, 0.3);
+    }
+}
+
+/* Updated logo state for index.html */
+#navLogo {
+    /* RESET BUTTON STYLES */
+    background: none !important;
+    border: none !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    cursor: default !important; /* Forces the normal arrow cursor */
+    user-select: none; /* Prevents text highlighting */
+    
+    /* RESTORE BRAND STYLES */
+    display: flex;
+    align-items: center;
+    color: var(--accent);
+    font-weight: 800;
+    font-size: 1.6rem;
+    text-shadow: 0 0 15px rgba(203, 166, 247, 0.5);
+}
+
+/* Ensure no hover effects trigger a background change */
+#navLogo:hover {
+    background: transparent !important;
+    transform: none !important;
+}
+
+/* WHEN SCROLLED - Add the glow and animation */
+#navLogo.visible {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateY(0) !important;
+    pointer-events: auto !important;
+}
+
+/* Apply the breathing glow ONLY when visible */
+#navLogo.visible span {
+    animation: glow-pulse 3s infinite alternate;
+}
+
+.nav-links a:hover {
+    background: rgba(203, 166, 247, 0.1);
+    color: var(--accent);
+}
+
+/* High-End Button Animations (Download & Support) */
+.btn-nav-accent {
+    background: var(--accent) !important;
+    color: var(--bg) !important;
+    font-weight: 700 !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+}
+
+.btn-nav-accent:hover {
+    transform: scale(1.08) translateY(-2px);
+    box-shadow: 0 8px 25px rgba(203, 166, 247, 0.4);
+}
+
+/* Pulse animation for the download count */
+#download-count {
+    display: inline-block;
+    transition: all 0.3s ease;
+    text-shadow: 0 0 20px rgba(166, 227, 161, 0.3);
+}
+
+/* Hover effect for the Ko-fi card specific button */
+.spec-card a.btn-main:hover {
+    box-shadow: 0 0 30px rgba(250, 179, 135, 0.4) !important;
+    transform: scale(1.05) translateY(-3px) !important;
+}
+
+/* Update your Anti-Cheat button styles */
+.btn-anticheat {
+    background-color: transparent !important;
+    color: #89b4fa !important; /* Catppuccin Blue */
+    border: 1px solid #89b4fa !important;
+    transition: all 0.3s ease !important; /* Ensures the hover is smooth */
+}
+
+/* Use a more specific selector to force the hover state */
+a.btn-main.btn-anticheat:hover {
+    background-color: #89b4fa !important;
+    color: #1e1e2e !important; /* Dark text on blue background */
+    box-shadow: 0 0 20px rgba(137, 180, 250, 0.4) !important;
+    transform: translateY(-2px);
+}
+
+.btn-nav-accent:active {
+    transform: scale(0.95);
+}
+
+.stats-grid {
+    display: flex;
+    flex-direction: row;
+    gap: 25px;
+    justify-content: center;
+    max-width: 1100px;
+    margin: 40px auto;
+}
+
+.spec-card {
+    flex: 1;
+    border-radius: 24px;
+    padding: 40px 20px;
+    border: 2px solid; /* Border color is handled inline above */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Mobile responsive: switch to vertical stack */
+@media (max-width: 768px) {
+    .stats-grid {
+        flex-direction: column;
+        padding: 0 20px;
+    }
+}
+    .spec-card {
+        width: 100%;
+        max-width: 500px;
+    }
+}
+
+
+/* Specific Style for Ko-fi / Support to differentiate */
+.btn-nav-support {
+    border: 1px solid var(--accent) !important;
+    color: var(--accent) !important;
+}
+
+.btn-nav-support:hover {
+    background: var(--accent) !important;
+    color: var(--bg) !important;
+    transform: scale(1.08) translateY(-2px);
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    
+    /* Performance & Rendering Optimizations */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    
+    /* Slight letter spacing adjustment for better legibility at small sizes */
+    letter-spacing: -0.01em; 
+}
+
+/* Make headers extra bold and punchy */
+h1, h2, h3 {
+    font-weight: 800;
+    letter-spacing: -0.03em; /* Tighter headers look more "pro" */
+    color: var(--text);
+}
+
+/* Keep your technical values clean */
+.spec-value {
+    font-weight: 600;
+}
+
+.spec-label {
+    font-weight: 500;
+    color: var(--subtext);
+    text-transform: uppercase;
+    font-size: 0.75rem;
+}
+
+        :root {
+
+            --accent: #cba6f7; /* Mauve */
+
+            --bg: #1e1e2e;
+
+            --text: #cdd6f4;
+
+            --accent-bg: #313244;
+
+            --code: #f38ba8;
+
+            --subtext: #9399b2;
+
+        }
+
+
+
+        /* Center all headings globally */
+
+        h1, h2, h3, h4 {
+
+            text-align: center;
+
+        }
+
+/* Container for the sliding links */
+.nav-links {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    justify-content: flex-end; /* Links stay anchored to the right */
+}
+
+/* Base style for ALL nav links to support the slide transition */
+.nav-links a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    overflow: hidden; /* CRITICAL for the width: 0 slide effect */
+    
+    /* Premium Transition Timing */
+    transition: 
+        opacity 0.3s ease, 
+        transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), 
+        width 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+        margin 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+        padding 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* The state triggered by the IntersectionObserver */
+.nav-links a.hidden-section {
+    opacity: 0 !important;
+    width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    transform: scale(0.4) !important;
+    pointer-events: none !important;
+    border: none !important;
+}
+
+/* --- PREMIUM HORIZONTAL SPECS --- */
+.specs-container {
+    padding: 4rem 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.specs-grid {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: stretch;
+    gap: 30px; /* Wider gap for more "breathing room" */
+}
+
+#kofi-count::after {
+    content: '';
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background: #a6e3a1; /* Green */
+    border-radius: 50%;
+    margin-left: 10px;
+    vertical-align: middle;
+    animation: pulse-green 2s infinite;
+}
+
+@keyframes pulse-green {
+    0% { box-shadow: 0 0 0 0 rgba(166, 227, 161, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(166, 227, 161, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(166, 227, 161, 0); }
+}
+
+.spec-card {
+    background: var(--accent-bg);
+    border: 1px solid rgba(203, 166, 247, 0.05);
+    border-radius: 20px;
+    padding: 35px;
+    flex: 1;
+    min-width: 320px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    /* RESTORING THE POP-OUT TRANSITION */
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+/* RESTORING THE OLD HOVER BEHAVIOR */
+.spec-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+}
+
+.spec-card h3 {
+    color: var(--accent);
+    margin: 0;
+    font-size: 1.6rem;
+    text-align: center;
+}
+
+.tier-desc {
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--subtext);
+    margin: 10px 0 30px 0;
+}
+
+/* Internal Horizontal Alignment */
+.spec-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0; /* More padding for a "cleaner" look */
+    border-bottom: 1px solid rgba(205, 214, 244, 0.05);
+}
+
+.spec-label {
+    color: var(--subtext);
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+}
+
+/* This hides the specific nav link when the section is active */
+.nav-links a.hidden-section {
+    opacity: 0;
+    visibility: hidden;
+    width: 0;
+    padding: 0;
+    margin: 0;
+    pointer-events: none;
+    transition: all 0.4s ease;
+}
+
+.spec-value {
+    color: var(--text);
+    font-weight: 500;
+}
+
+.use-case-box {
+    margin-top: auto;
+    padding-top: 25px;
+    font-size: 0.9rem;
+    color: var(--accent);
+    text-align: center;
+    line-height: 1.5;
+    opacity: 0.9;
+}
+
+/* Mobile responsive fix */
+@media (max-width: 1050px) {
+    .specs-grid {
+        flex-direction: column;
+        align-items: center;
+    }
+    .spec-card { width: 100%; max-width: 450px; }
+}
+
+        /* Transparent Mauve Header Styling */
+
+        header {
+
+            position: relative;
+
+            background-image: linear-gradient(rgba(203, 166, 247, 0.4), rgba(30, 30, 46, 0.9)), url('./assets/images/header-bg.jpg');
+
+            background-size: cover;
+
+            background-position: center;
+
+            padding: 8rem 2rem; /* Increased vertical padding */
+
+            border-radius: 0 0 15px 15px;
+
+            color: white;
+
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+
+            text-align: center;
+
+        }
+
+
+
+        header h1 {
+
+            font-size: 3.5rem;
+
+            margin-bottom: 0;
+
+        }
+
+
+
+        header p {
+
+            max-width: 700px;
+
+            margin: 2rem auto 0; /* Increased top margin for more spacing from the title */
+
+            font-size: 1.2rem;
+
+            line-height: 1.6;
+
+        }
+
+
+
+        /* Button Styling */
+
+        .action-container { 
+
+            display: flex; 
+
+            gap: 15px; 
+
+            margin-top: 30px; 
+
+            flex-wrap: wrap; 
+
+            align-items: center; 
+
+            justify-content: center; 
+
+        }
+
+        
+
+        .btn-main { 
+
+            padding: 12px 24px; 
+
+            border-radius: 5px; 
+
+            text-decoration: none; 
+
+            font-weight: bold; 
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            border: none;
+
+            cursor: pointer;
+
+            font-size: 1rem;
+
+            transition: opacity 0.2s;
+
+        }
+
+        
+
+        .btn-download { background-color: var(--accent-bg); color: var(--text) !important; }
+
+        .btn-kofi { background-color: var(--accent); color: var(--bg) !important; }
+
+        .btn-main:hover { opacity: 0.9; }
+
+
+
+        .is-list { color: #a6e3a1; list-style-type: '✓ '; }
+
+        .not-list { color: #f38ba8; list-style-type: '× '; }
+
+
+
+        /* Footer centered styling */
+
+        footer { 
+
+            padding: 4rem 2rem 2rem; 
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+
+            text-align: center;
+
+        }
+
+/* --- BUTTON ANIMATION ADD-ON --- */
+.btn-main {
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    position: relative;
+    top: 0;
+}
+
+/* The Pop-out effect on Hover */
+.btn-main:hover {
+    transform: scale(1.1); /* Matches your arrow scaling */
+    top: -5px; /* Physical lift effect */
+    opacity: 1 !important; /* Overrides the 0.9 opacity you had */
+}
+
+/* Specific Glow for Download (Darker) */
+.btn-download:hover {
+    box-shadow: 0 10px 25px rgba(49, 50, 68, 0.6);
+}
+
+/* Specific Glow for Ko-fi (Mauve) */
+.btn-kofi:hover {
+    box-shadow: 0 10px 25px rgba(203, 166, 247, 0.5);
+}
+
+/* Press effect */
+.btn-main:active {
+    transform: scale(0.95);
+    top: 0;
+}
+
+/* --- GAMING LAB SLIDER --- */
+.game-slider-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+    margin: 3rem 0;
+}
+
+.game-slider-container {
+    flex-shrink: 0;
+    width: 90%;
+    max-width: 600px; /* Focused size for the game card */
+    aspect-ratio: 4 / 3;
+    position: relative;
+    overflow: hidden;
+    border-radius: 24px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+}
+
+.game-viewer {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.game-slide {
+    flex: 0 0 100%;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    position: relative;
+	flex: 0 0 100%; /* CRITICAL: This stops the cards from stacking/squishing */
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    position: relative;
+}
+
+.game-slide-img {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.6);
+    transition: all 0.5s ease;
+}
+
+.game-slide:hover .game-slide-img {
+    filter: brightness(0.9) scale(1.05);
+}
+
+.game-slide-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 40px;
+    background: linear-gradient(to top, rgba(30, 30, 46, 1), transparent);
+    color: white;
+}
+
+.game-slide-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--accent);
+    margin-bottom: 5px;
+    display: block;
+}
+
+.game-slide-status {
+    font-size: 0.8rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    opacity: 0.8;
+}
+
+/* --- ULTIMATE CENTERING FIX --- */
+.slider-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 40px; 
+    width: 98vw; 
+    max-width: 100%;
+    margin: 4rem 0; 
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%); 
+}
+
+.screenshot-container {
+    flex-shrink: 0; 
+    width: 150%; /* Your massive width setting */
+    max-width: 1600px;  
+    aspect-ratio: 16 / 9;
+    position: relative;
+    background: #11111b;
+    border-radius: 20px;
+    overflow: hidden; /* CRITICAL: Hide the images outside the frame */
+    box-shadow: 0 30px 80px rgba(0,0,0,0.8);
+}
+
+/* FIX: This acts as the "film strip" holding your images in a row */
+.screenshot-viewer {
+    display: flex; 
+    width: 100%;
+    height: 100%;
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.screenshot-viewer img {
+    width: 100%; /* Each image takes 100% of the container's width */
+    height: 100%;
+    object-fit: cover;
+    flex-shrink: 0; /* CRITICAL: Prevents images from squishing to fit in the box */
+    display: block;
+    pointer-events: none;
+}
+
+.external-nav {
+    background: var(--accent-bg);
+    color: var(--accent);
+    border: 2px solid var(--accent);
+    width: 30px;  /* Your tiny button setting */
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    flex-shrink: 0;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+    z-index: 10;
+}
+
+/* ProtonDB Button - Distinctive Style */
+.btn-proton {
+    background-color: #cba6f7 !important; /* Catppuccin Mauve */
+    color: #1e1e2e !important;
+    border: none !important;
+}
+
+.btn-proton:hover {
+    box-shadow: 0 8px 20px rgba(203, 166, 247, 0.4) !important;
+    transform: translateY(-2px);
+}
+
+/* Anti-Cheat Button - Secondary Style */
+.btn-anticheat {
+    background-color: transparent !important;
+    color: #89b4fa !important;
+    border: 1px solid #89b4fa !important;
+}
+
+.btn-anticheat:hover {
+    background-color: rgba(137, 180, 250, 0.1) !important;
+    box-shadow: 0 8px 20px rgba(137, 180, 250, 0.2) !important;
+}
+
+.external-nav:hover {
+    background: var(--accent);
+    color: var(--bg);
+    transform: scale(1.2);
+}
+
+
+        .github-bottom {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 8px;
+
+            color: var(--subtext);
+
+            text-decoration: none;
+
+            font-size: 0.9rem;
+
+            margin-top: 15px;
+
+            padding: 8px 16px;
+
+            border: 1px solid var(--accent-bg);
+
+            border-radius: 20px;
+
+            transition: all 0.2s;
+
+        }
+
+        .github-bottom:hover { 
+
+            color: var(--text); 
+
+            background: var(--accent-bg);
+
+        }
+
+        .github-bottom svg { fill: currentColor; width: 20px; }
+
+
+    </style>
+
+
+
+    <meta property="og:title" content="Lumine OS">
+
+    <meta property="og:description" content="Lightweight Debian-based OS for gamers and developers.">
+
+    <meta property="og:type" content="website">
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/prism.min.js"></script>
+
+</head>
+
+
+
+<body>
+
+<nav class="scrolled"> <a class="plain-logo-trigger visible" id="navLogo" href="index.html">
+        <span>Lumine</span>
+    </a>
+    <div class="nav-links">
+        <a href="index.html#specs-container">Specs</a>
+        <a href="community.html" class="active">Community</a>
+        <a href="index.html#download" class="btn-nav-accent">Download</a>
+    </div>
+</nav>
+
+<header id=hero>
+    <h2> <h1>Lumine</h1>
+         <p>A modern, lightweight Linux desktop built for those transitioning from Windows who demand a clean experience, high performance, and reliable gaming — without unnecessary bloat.</p>
+    <h2> </header>
+
+
+    <hr>
+
+
+<div class="slider-wrapper">
+    <button class="external-nav" onclick="moveSlide(-1)">&#10094;</button>
+    
+    <div class="screenshot-container">
+        <div class="screenshot-viewer" id="slider">
+            <img src="./assets/images/screenshot1.jpg" alt="Lumine Desktop">
+            <img src="./assets/images/screenshot2.jpg" alt="Gaming Performance">
+            <img src="./assets/images/screenshot3.jpg" alt="Terminal View">
+        </div>
+    </div>
+
+    <button class="external-nav" onclick="moveSlide(1)">&#10095;</button>
+</div>
+
+<script>
+    let currentSlide = 0;
+    const slider = document.getElementById('slider');
+    
+    function moveSlide(direction) {
+        const totalSlides = slider.querySelectorAll('img').length;
+        currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
+        slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+    }
+
+    // Hotkeys for your users
+    window.addEventListener('keydown', (e) => {
+        if (e.key === "ArrowLeft") moveSlide(-1);
+        if (e.key === "ArrowRight") moveSlide(1);
+    });
+</script>
+
+<main>
+
+    <section>
+
+        <h2>What is Lumine?</h2>
+
+        <p>Lumine is a Linux distribution which is based on Debian 12 (Bookworm) and focuses on stability, polish, practicality and most importantly Gaming rather than hype. Lumine supports pretty much every normal way people install games. From Steam to CDs, from .exe to .msi</p>
+
+    </section>
+
+
+
+    <hr>
+
+
+
+<section class="game-lab-section" style="margin-top: 4rem;">
+    <h2>Verified Gaming Lab</h2>
+    <p style="color: var(--subtext); text-align: center; margin-bottom: 20px;">Native performance benchmarks on the latest Lumine</p>
+    <p style="color: var(--subtext); text-align: center; margin-bottom: 20px;">(Tested on an i3-3240 + 8gb-Ram + GT740-4gb rig)</p>
+	
+    <div class="game-slider-wrapper">
+        <button class="external-nav" onclick="moveGameSlide(-1)">&#10094;</button>
+
+        <div class="game-slider-container">
+            <div class="game-viewer" id="gameSlider">
+                
+                <a href="perf_mc.html" class="game-slide">
+                    <div class="game-slide-img" style="background-image: url('./assets/images/mc_thumb.jpg');"></div>
+                    <div class="game-slide-info">
+                        <span class="game-slide-status">Verified: Platinum</span>
+                        <span class="game-slide-title">Minecraft</span>
+                        <span style="color: var(--subtext); font-size: 0.9rem;">Perfect compatibility with Iris/Sodium →</span>
+                    </div>
+                </a>
+
+                <a href="perf_csgo.html" class="game-slide">
+                    <div class="game-slide-img" style="background-image: url('./assets/images/csgo_thumb.jpg');"></div>
+                    <div class="game-slide-info">
+                        <span class="game-slide-status">Verified: Platinum</span>
+                        <span class="game-slide-title">CS:GO / CS2</span>
+                        <span style="color: var(--subtext); font-size: 0.9rem;">Ultra-low latency Vulkan rendering →</span>
+                    </div>
+                </a>
+
+                <a href="perf_tdu.html" class="game-slide">
+                    <div class="game-slide-img" style="background-image: url('./assets/images/tdu_thumb.jpg');"></div>
+                    <div class="game-slide-info">
+                        <span class="game-slide-status">Verified: Gold</span>
+                        <span class="game-slide-title">Test Drive Unlimited</span>
+                        <span style="color: var(--subtext); font-size: 0.9rem;">Legacy titles running via Wine-GE →</span>
+                    </div>
+                </a>
+
+                <a href="perf_nfsmw.html" class="game-slide">
+                    <div class="game-slide-img" style="background-image: url('./assets/images/nfsmw_thumb.jpg');"></div>
+                    <div class="game-slide-info">
+                        <span class="game-slide-status">Verified: Platinum</span>
+                        <span class="game-slide-title">NFS Most Wanted 2012</span>
+                        <span style="color: var(--subtext); font-size: 0.9rem;">Solid 60FPS on Recommended Specs →</span>
+                    </div>
+                </a>
+
+                <a href="perf_omori.html" class="game-slide">
+                    <div class="game-slide-img" style="background-image: url('./assets/images/omori_thumb.jpg');"></div>
+                    <div class="game-slide-info">
+                        <span class="game-slide-status">Verified: Platinum</span>
+                        <span class="game-slide-title">Omori</span>
+                        <span style="color: var(--subtext); font-size: 0.9rem;">Native performance on RPGMaker engine →</span>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+
+        <button class="external-nav" onclick="moveGameSlide(1)">&#10095;</button>
+    </div>
+</section>
+
+
+    <hr>
+	
+	
+	
+    <section>
+
+        <h2>Core Characteristics</h2>
+
+        <ul>
+
+            <li><strong>Base:</strong> Debian 12 (Bookworm). Rock-solid, long-term stability with non-free-firmware enabled.</li>
+
+            <li><strong>Desktop Environment:</strong> <a href="https://buddiesofbudgie.org/">Budgie-Desktop</a> (Wayland-ready, but uses X11). Clean layout, familiar workflow for Windows users.</li>
+
+            <li><strong>Visual Design:</strong> Catppuccin Mocha theme. Consistent dark UI with soft contrast.</li>
+
+            <li><strong>Boot & Polish:</strong> Custom Plymouth boot screen. Optimized initramfs.</li>
+
+        </ul>
+
+    </section>
+
+
+
+    <section>
+
+        <h2>Gaming Ready</h2>
+
+        <p>Lumine is configured so gaming works out of the box.</p>
+
+        <ul>
+
+            <li><strong>Steam & Proton:</strong> Pre-installed and configured with 32-bit libraries.</li>
+
+            <li><strong>Graphics:</strong> Mesa drivers and Vulkan tools installed by default.</li>
+
+            <li><strong>Non-Steam Games:</strong> Full Wine support for Heroic and Lutris launchers.</li>
+
+        </ul>
+
+    </section>
+
+
+    <hr>
+	
+	
+<section id="specs-container" class="specs-container">
+    <h2>System Requirements</h2>
+    <div class="specs-grid">
+
+        <div class="spec-card">
+            <h3>Minimum</h3>
+            <p class="tier-desc">Basic desktop functionality</p>
+            <div class="spec-row"><span class="spec-label">CPU</span><span class="spec-value">64-bit x86_64</span></div>
+            <div class="spec-row"><span class="spec-label">RAM</span><span class="spec-value">4 GB</span></div>
+            <div class="spec-row"><span class="spec-label">Storage</span><span class="spec-value">25 GB HDD</span></div>
+            <div class="spec-row"><span class="spec-label">GPU</span><span class="spec-value">OpenGL Support</span></div>
+            <div class="spec-row"><span class="spec-label">Display</span><span class="spec-value">1366×768 (HD Ready)</span></div>
+            <div class="use-case-box">Best for light web browsing and office applications (and bit of lightweight gaming).</div>
+        </div>
+
+        <div class="spec-card" style="border-color: var(--accent); background: linear-gradient(180deg, var(--accent-bg), #26273a);">
+            <h3>Recommended</h3>
+            <p class="tier-desc">Smooth multitasking experience</p>
+            <div class="spec-row"><span class="spec-label">CPU</span><span class="spec-value">Quad-core Intel/AMD</span></div>
+            <div class="spec-row"><span class="spec-label">RAM</span><span class="spec-value">8 GB</span></div>
+            <div class="spec-row"><span class="spec-label">Storage</span><span class="spec-value">40 GB SSD</span></div>
+            <div class="spec-row"><span class="spec-label">GPU</span><span class="spec-value">Vulkan Capable</span></div>
+            <div class="spec-row"><span class="spec-label">Display</span><span class="spec-value">1920×1080 (FHD)</span></div>
+            <div class="use-case-box" style="color: #a6e3a1;">Ideal for day-to-day multitasking and gaming.</div>
+        </div>
+
+        <div class="spec-card">
+            <h3>Professional</h3>
+            <p class="tier-desc">High-end performance & FPS</p>
+            <div class="spec-row"><span class="spec-label">CPU</span><span class="spec-value">6-core or better</span></div>
+            <div class="spec-row"><span class="spec-label">RAM</span><span class="spec-value">16 GB+</span></div>
+            <div class="spec-row"><span class="spec-label">Storage</span><span class="spec-value">256GB+ SSD</span></div>
+            <div class="spec-row"><span class="spec-label">GPU</span><span class="spec-value">Dedicated Vulkan</span></div>
+            <div class="spec-row"><span class="spec-label">Display</span><span class="spec-value">3840 x 2160 (UHD)</span></div>
+            <div class="use-case-box">Optimized for AAA Proton gaming and high resolution.</div>
+        </div>
+
+    </div>
+</section>
+
+
+
+<hr>
+
+
+
+<section id="compatibility" style="text-align: center; padding: 4rem 2rem; background: rgba(30, 30, 46, 0.4);">
+    <h2 style="color: var(--text);">Verify Compatibility</h2>
+    <p style="max-width: 750px; margin: 0 auto 35px auto; color: var(--subtext); line-height: 1.6;">
+        Lumine leverages Proton and Wine to run Windows titles. Before installing Lumine
+         why don't you check it out if your favorite title supports us?
+    </p>
+
+    <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+        <a href="https://www.protondb.com/explore" target="_blank" class="btn-main btn-proton">
+            <svg viewBox="0 0 24 24" style="width:18px; fill:currentColor; margin-right:8px;">
+                <path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71L12 2z"/>
+            </svg>
+            ProtonDB
+        </a>
+
+        <a href="https://areweanticheatyet.com/" target="_blank" class="btn-main btn-anticheat">
+            <svg viewBox="0 0 24 24" style="width:18px; fill:currentColor; margin-right:8px;">
+                <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/>
+            </svg>
+            Are We Anti-Cheat Yet?
+        </a>
+    </div>
+</section>
+
+    <hr>
+
+<section id="support-stats" class="specs-container" style="padding-top: 0;">
+    <div class="stats-grid">
+        
+        <div class="spec-card" style="border-color: #a6e3a1; background: linear-gradient(180deg, #1e1e2e, #1a2d20); display: flex; flex-direction: column; justify-content: center; min-height: 350px; text-align: center;">
+            <div style="font-size: 2.5rem; margin-bottom: 10px;">🚀</div>
+            <h3 style="color: #a6e3a1; margin-bottom: 20px;">GitHub Momentum</h3>
+            
+            <div style="display: flex; flex-direction: column; align-items: center;">
+                <span id="github-download-count" style="font-size: 3.5rem; font-weight: 800; color: #ffffff; line-height: 1;">...</span>
+                <p style="text-transform: uppercase; font-size: 0.8rem; letter-spacing: 2px; color: #bac2de; margin-top: 10px;">Total Downloads</p>
+                <div id="live-indicator" style="font-size: 0.6rem; color: #a6e3a1; margin-top: 15px; font-weight: bold;">● LIVE API SYNC</div>
+            </div>
+        </div>
+
+        <div class="spec-card" style="border-color: #fab387; background: linear-gradient(180deg, #1e1e2e, #2d201a); display: flex; flex-direction: column; justify-content: center; min-height: 350px; text-align: center;">
+            <div style="font-size: 2.5rem; margin-bottom: 10px;">☕</div>
+            <h3 style="color: #fab387; margin-bottom: 20px;">Fuel the Project</h3>
+            
+            <div style="display: flex; flex-direction: column; align-items: center;">
+                <span id="kofi-count" style="font-size: 3.5rem; font-weight: 800; color: #ffffff; line-height: 1;">...</span>
+                <p id="kofi-label" style="text-transform: uppercase; font-size: 0.8rem; letter-spacing: 2px; color: #bac2de; margin-top: 10px;">Supporters</p>
+                <div class="kofi-pulse-dot" style="font-size: 0.6rem; color: #fab387; margin-top: 15px; font-weight: bold;">● REAL-TIME</div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+    <hr>
+	
+    <section>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+
+            <div>
+
+                <h4>Lumine OS is:</h4>
+
+                <ul class="is-list">
+
+                    <li>Stable</li>
+
+                    <li>Clean</li>
+
+                    <li>Gaming-capable</li>
+
+                    <li>Minimal</li>
+
+                    <li>Debian-powered</li>
+
+                </ul>
+
+            </div>
+
+            <div>
+
+                <h4>Lumine OS is not:</h4>
+
+                <ul class="not-list">
+
+                    <li>Bloated</li>
+
+                    <li>Experimental</li>
+
+                    <li>Rolling-release chaos</li>
+
+                    <li>Locked-down</li>
+
+                </ul>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <hr>
+
+
+
+    <section id="download" style="text-align: center;">
+
+        <h2>Download & Support</h2>
+
+        <p>Current Release: <strong>v1.0 (Flamingos)</strong></p>
+
+        
+
+        <div class="action-container">
+
+            <a href="YOUR_ISO_DOWNLOAD_LINK_HERE" class="btn-main btn-download">Download Lumine</a>
+
+            <a href="https://ko-fi.com/raventhedeveloper" class="btn-main btn-kofi">
+
+                <svg viewBox="0 0 24 24" style="width:20px; fill:currentColor;"><path d="M23.881 8.948c-.773-4.085-4.859-4.593-4.859-4.593H.723c-.604 0-.679.798-.679.798s-.082 7.324-.022 11.822c.164 2.424 2.586 2.672 2.586 2.672s8.267-.023 11.966-.049c2.438-.426 2.683-2.566 2.658-3.734 4.352.24 7.422-2.831 6.649-6.916zm-11.062 3.511c-1.246 1.453-4.011 3.976-4.011 3.976s-.121.119-.31.023c-.076-.057-.108-.09-.108-.09-.443-.441-3.368-3.049-4.034-3.954-.709-.965-1.041-2.7-.091-3.71.951-1.01 3.005-1.086 4.363.407 0 0 1.565-1.782 3.468-.963 1.904.82 1.832 3.011.723 4.311zm6.173.478c-.928.116-1.682.028-1.682.028V7.284h1.77s1.971.551 1.971 2.638c0 1.913-.985 2.667-2.059 3.015z"/></svg>
+
+                Support on Ko-fi
+
+            </a>
+
+        </div>
+
+
+
+        <p style="font-size: 0.9rem; margin-top: 20px; opacity: 0.8; max-width: 500px; margin-left: auto; margin-right: auto;">
+
+            Lumine is free, but support helps keep the project alive. 
+
+            You can pay what you want on Ko-fi before/after download (Or just press the download button).
+
+        </p>
+
+    </section>
+	
+	<hr>
+
+<section id="community-testing" style="padding: 4rem 2rem;">
+    <div style="max-width: 800px; margin: 0 auto; text-align: center;">
+        <h2 style="color: #cba6f7;">Become a Lumine Tester</h2>
+        <p style="color: var(--subtext); margin-bottom: 30px;">
+            Hardware diversity is the biggest challenge in low-level development. 
+            We need your help to verify kernel stability and frame timings on different setups.
+        </p>
+        
+        <div style="display: flex; gap: 30px; justify-content: center; flex-wrap: wrap; margin-top: 40px;">
+            <div class="spec-card" style="flex: 1; min-width: 300px; max-width: 450px; border-color: #89b4fa; padding: 30px; display: flex; flex-direction: column; justify-content: space-between;">
+                <h3 style="color: #89b4fa; margin-bottom: 15px;">Report a Bug</h3>
+                <p style="color: var(--subtext); font-size: 0.9rem; margin-bottom: 20px;">
+                    Found a kernel panic or a broken driver? Open an issue on GitHub for our low-level triage.
+                </p>
+                <a href="https://github.com/AbhranilDasgupta/Lumine/issues" target="_blank" style="color: #89b4fa; text-decoration: none; font-weight: bold; align-self: flex-start;">Open Issue →</a>
+            </div>
+
+            <div class="spec-card" style="flex: 1; min-width: 300px; max-width: 450px; border-color: #a6e3a1; padding: 30px; display: flex; flex-direction: column; justify-content: space-between;">
+                <h3 style="color: #a6e3a1; margin-bottom: 15px;">Benchmark Logs</h3>
+                <p style="color: var(--subtext); font-size: 0.9rem; margin-bottom: 20px;">
+                    Share your <code>mangohud</code> logs to help us optimize scheduling and frame timings.
+                </p>
+                <a href="#" style="color: #a6e3a1; text-decoration: none; font-weight: bold; align-self: flex-start;">Submit Log →</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+</main>
+
+
+
+<footer class="site-footer">
+    <div class="footer-left">
+        <a href="https://github.com/AbhranilDasgupta/Lumine" target="_blank" class="github-icon-link">
+            <svg viewBox="0 0 32 32"><path d="M16 0.395c-8.836 0-16 7.163-16 16 0 7.069 4.585 13.067 10.942 15.182 0.8 0.148 1.094-0.347 1.094-0.77 0-0.381-0.015-1.642-0.022-2.979-4.452 0.968-5.391-1.888-5.391-1.888-0.728-1.849-1.776-2.341-1.776-2.341-1.452-0.993 0.11-0.973 0.11-0.973 1.606 0.113 2.452 1.649 2.452 1.649 1.427 2.446 3.743 1.739 4.656 1.33 0.143-1.034 0.558-1.74 1.016-2.14-3.554-0.404-7.29-1.777-7.29-7.907 0-1.747 0.625-3.174 1.649-4.295-0.166-0.403-0.714-2.030 0.155-4.234 0 0 1.344-0.43 4.401 1.64 1.276-0.355 2.645-0.532 4.005-0.539 1.359 0.006 2.729 0.184 4.008 0.539 3.054-2.070 4.395-1.64 4.395-1.64 0.871 2.204 0.323 3.831 0.157 4.234 1.026 1.12 1.647 2.548 1.647 4.295 0 6.145-3.743 7.498-7.306 7.895 0.574 0.497 1.085 1.47 1.085 2.963 0 2.141-0.019 3.864-0.019 4.391 0 0.426 0.288 0.925 1.099 0.768 6.354-2.118 10.933-8.113 10.933-15.18 0-8.837-7.164-16-16-16z"></path></svg>
+        </a>
+        <div class="raven-brand-footer">
+            <img src="./assets/images/ravein.png" alt="RAVeN" id="ravenLogoFooter">
+        </div>
+    </div>
+
+    <div class="footer-center">
+        <p>Lumine is based on Debian.</p>
+        <p>Built by RAVeN. Follow him on <a href="https://www.reddit.com/user/Dawg_yt1244" target="_blank">Reddit</a>.</p>
+        <address style="font-style: normal;">
+            Bugs or Contact? <a href="mailto:offraventhedeveloper@gmail.com">Click Here</a>
+        </address>
+        <p class="legal-text"><small>Linux® is the registered trademark of Linus Torvalds</small></p>
+        <p class="legal-text"><small>© 2025 Lumine Project</small></p>
+    </div>
+
+    <div class="footer-right"></div>
+</footer>
+
+
+
+</body>
+
+<script>
+    /**
+     * LUMINE PROJECT - CORE ENGINE (FIXED)
+     */
+
+    const nav = document.querySelector('nav');
+    const logo = document.getElementById('navLogo');
+    const githubCountEl = document.getElementById('github-download-count');
+    const kofiCountEl = document.getElementById('kofi-count');
+    const liveInd = document.getElementById('live-indicator');
+
+    const handleScroll = () => {
+        const isScrolled = window.pageYOffset > 100;
+        if (isScrolled) {
+            nav.classList.add('scrolled');
+            if (logo) {
+                logo.classList.add('visible');
+                logo.style.pointerEvents = "none"; 
+            }
+        } else {
+            nav.classList.remove('scrolled');
+            if (logo) logo.classList.remove('visible');
+        }
+    };
+
+    const initSmoothScroll = () => {
+        document.querySelectorAll('nav a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href && href.startsWith('#')) {
+                    e.preventDefault();
+                    const target = (href === '#') ? document.body : document.querySelector(href);
+                    if (target) {
+                        const offset = 80; 
+                        const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - offset;
+                        window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+                    }
+                }
+            });
+        });
+    };
+
+    // --- CONSOLIDATED OBSERVER ---
+    const initObserver = () => {
+        const observerOptions = {
+            root: null,
+            threshold: 0.2 
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const id = entry.target.getAttribute('id');
+                
+                // Selectors updated to match your HTML exactly
+                const homeLink = document.querySelector('.nav-links a[href="index.html"]');
+                const specsLink = document.querySelector('.nav-links a[href="index.html#specs-container"]');
+                const downloadBtn = document.querySelector('.btn-nav-accent');
+
+                // We use 'hidden-section' because that's what your CSS uses
+                if (entry.isIntersecting) {
+                    if (id === 'header' || id === 'hero') homeLink?.classList.add('hidden-section');
+                    if (id === 'specs-container') specsLink?.classList.add('hidden-section');
+                    if (id === 'download') downloadBtn?.classList.add('hidden-section');
+                } else {
+                    if (id === 'header' || id === 'hero') homeLink?.classList.remove('hidden-section');
+                    if (id === 'specs-container') specsLink?.classList.remove('hidden-section');
+                    if (id === 'download') downloadBtn?.classList.remove('hidden-section');
+                }
+            });
+        }, observerOptions);
+
+        // Track all three trigger points
+        ['header', 'specs-container', 'download'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) observer.observe(el);
+        });
+    };
+
+    // --- SLIDERS ---
+    let currentS = 0;
+    window.moveSlide = (dir) => {
+        const viewer = document.getElementById('slider');
+        if (!viewer) return;
+        const total = viewer.querySelectorAll('img').length;
+        currentS = (currentS + dir + total) % total;
+        viewer.style.transform = `translateX(-${currentS * 100}%)`;
+    };
+
+    let currentG = 0;
+    window.moveGameSlide = (dir) => {
+        const gameViewer = document.getElementById('gameSlider');
+        if (!gameViewer) return;
+        const total = gameViewer.querySelectorAll('.game-slide').length;
+        currentG = (currentG + dir + total) % total;
+        gameViewer.style.transform = `translateX(-${currentG * 100}%)`;
+    };
+
+    // --- API FETCHERS ---
+    async function fetchDownloadStats() {
+        try {
+            const response = await fetch(`https://api.github.com/repos/AbhranilDasgupta/Lumine/releases`);
+            const releases = await response.json();
+            let total = 0;
+            releases.forEach(rel => rel.assets.forEach(as => total += as.download_count));
+            if (githubCountEl) githubCountEl.innerText = total.toLocaleString();
+            if (liveInd) liveInd.style.opacity = "1";
+        } catch (e) { console.error("Stats fail"); }
+    }
+
+    async function fetchKofiStats() {
+        try {
+            const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent('https://ko-fi.com/raventhedeveloper')}`);
+            const data = await response.json();
+            const match = data.contents.match(/subscribers_count\\":(\d+)/) || data.contents.match(/\"followers_count\":(\d+)/);
+            if (kofiCountEl) kofiCountEl.innerText = (match) ? match[1] : "0";
+        } catch (e) { console.error("Kofi fail"); }
+    }
+
+    // --- START ---
+    document.addEventListener('DOMContentLoaded', () => {
+        window.addEventListener('scroll', () => { window.requestAnimationFrame(handleScroll); }, { passive: true });
+        handleScroll();
+        initSmoothScroll();
+        initObserver();
+        fetchDownloadStats();
+        fetchKofiStats();
+        window.addEventListener('keydown', (e) => {
+            if (e.key === "ArrowLeft") moveSlide(-1);
+            if (e.key === "ArrowRight") moveSlide(1);
+        });
+    });
+</script>
+</html>

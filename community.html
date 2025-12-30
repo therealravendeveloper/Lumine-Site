@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <title>Community | The Lumine Project</title>
+    <link rel="stylesheet" href="./assets/style.css">
+    <link rel="icon" href="./assets/images/favicon.png">
+
+    <style>
+        :root {
+            --accent: #cba6f7;
+            --bg: #1e1e2e;
+            --text: #cdd6f4;
+            --accent-bg: #313244;
+            --subtext: #9399b2;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding-top: 120px;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        /* --- NAVIGATION --- */
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            padding: 0.8rem 5%;
+            background: rgba(30, 30, 46, 0.8);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(203, 166, 247, 0.1);
+        }
+
+        /* Fixed: Changed to a div with pointer-events: none to ensure no "button" feel */
+        #navLogo {
+            font-weight: 800;
+            font-size: 1.6rem;
+            color: var(--accent);
+            text-shadow: 0 0 15px rgba(203, 166, 247, 0.4);
+            user-select: none;
+            cursor: default;
+        }
+
+        .nav-links { display: flex; gap: 15px; align-items: center; }
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            font-size: 0.85rem;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+
+        .nav-links a.active, .nav-links a:hover {
+            background: rgba(203, 166, 247, 0.1);
+            color: var(--accent);
+        }
+
+        .btn-nav-accent {
+            background: var(--accent) !important;
+            color: var(--bg) !important;
+            font-weight: 700 !important;
+        }
+
+        /* --- MAIN LAYOUT --- */
+        .community-page-wrapper {
+            max-width: 1400px; /* Matches index.html container width */
+            margin: 0 auto;
+            width: 95%;
+            padding: 40px 20px 100px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .community-header { 
+            text-align: center; 
+            margin-bottom: 80px; 
+        }
+
+        .community-header h2 { 
+            font-size: 3.5rem; 
+            margin-bottom: 15px; 
+            letter-spacing: -0.04em; 
+            font-weight: 800;
+        }
+
+        .community-header p {
+            color: var(--subtext);
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* --- FLEX ROW FIX --- */
+        .community-grid {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: stretch;
+            gap: 30px;
+            width: 100%;
+        }
+
+        .spec-card {
+            background: rgba(49, 50, 68, 0.3);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+            padding: 60px 40px;
+            flex: 1; 
+            min-width: 320px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .spec-card:hover {
+            transform: translateY(-10px);
+            background: rgba(49, 50, 68, 0.5);
+            border-color: var(--accent);
+        }
+
+        .featured-card {
+            border: 2px solid var(--accent);
+            background: linear-gradient(180deg, rgba(203, 166, 247, 0.1), rgba(30, 30, 46, 0.4));
+        }
+
+        .spec-card h3 { 
+            color: var(--accent); 
+            font-size: 1.8rem; 
+            margin: 0 0 15px 0;
+            font-weight: 800;
+        }
+
+        .tier-desc { 
+            color: var(--subtext); 
+            line-height: 1.6; 
+            font-size: 1rem;
+            margin-bottom: 40px;
+        }
+
+        /* --- BUTTONS --- */
+        .btn-main {
+            padding: 14px 24px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            display: block;
+        }
+
+        .btn-outline { border: 1px solid var(--accent); color: var(--accent); }
+        .btn-accent { background: var(--accent); color: var(--bg); }
+        .btn-github { background: rgba(255, 255, 255, 0.05); color: #fff; border: 1px solid rgba(255, 255, 255, 0.1); }
+
+        .btn-main:hover { 
+            filter: brightness(1.2); 
+            transform: scale(1.05);
+        }
+
+        /* --- FOOTER --- */
+        .site-footer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 60px 5%;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(30, 30, 46, 0.2);
+            text-align: center;
+        }
+
+        .footer-center p { margin: 5px 0; color: #bac2de; font-size: 0.9rem; }
+        .legal-text { opacity: 0.5; font-size: 0.75rem; margin-top: 10px !important; }
+
+        #ravenLogoFooter { height: 22px; filter: brightness(0) invert(1); opacity: 0.8; margin: 15px 0; }
+        .github-icon-link svg { width: 28px; fill: #ffffff; opacity: 0.7; }
+
+        @media (max-width: 1050px) {
+            .community-grid { flex-direction: column; align-items: center; }
+            .spec-card { width: 100%; max-width: 500px; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div id="navLogo">Lumine</div>
+    
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+    </div>
+</nav>
+
+<main class="community-page-wrapper">
+    <div class="community-header">
+        <h2>Community Nodes</h2>
+        <p>Select an endpoint to contribute to the Lumine Project ecosystem.</p>
+    </div>
+
+    <div class="community-grid">
+        <div class="spec-card">
+            <h3>Discord</h3>
+            <p class="tier-desc">The main hub for support, real-time talk, and hardware triage with other users.</p>
+            <a href="https://discord.gg/Ja4GTGt2hM" class="btn-main btn-outline">Entrance Protocol →</a>
+        </div>
+
+        <div class="spec-card featured-card">
+            <h3>Subreddit</h3>
+            <p class="tier-desc">Share your desktop setups, gaming benchmarks, and community news.</p>
+            <a href="https://www.reddit.com/r/LumineOS/" class="btn-main btn-accent">Join Subreddit →</a>
+        </div>
+
+        <div class="spec-card">
+            <h3>GitHub</h3>
+            <p class="tier-desc">Official bug tracking, feature requests, and code contributions for the distro.</p>
+            <a href="https://github.com/AbhranilDasgupta/Lumine" class="btn-main btn-github">View Source →</a>
+        </div>
+    </div>
+</main>
+
+<footer class="site-footer">
+    <a href="https://github.com/AbhranilDasgupta/Lumine" target="_blank" class="github-icon-link">
+        <svg viewBox="0 0 32 32"><path d="M16 0.395c-8.836 0-16 7.163-16 16 0 7.069 4.585 13.067 10.942 15.182 0.8 0.148 1.094-0.347 1.094-0.77 0-0.381-0.015-1.642-0.022-2.979-4.452 0.968-5.391-1.888-5.391-1.888-0.728-1.849-1.776-2.341-1.776-2.341-1.452-0.993 0.11-0.973 0.11-0.973 1.606 0.113 2.452 1.649 2.452 1.649 1.427 2.446 3.743 1.739 4.656 1.33 0.143-1.034 0.558-1.74 1.016-2.14-3.554-0.404-7.29-1.777-7.29-7.907 0-1.747 0.625-3.174 1.649-4.295-0.166-0.403-0.714-2.030 0.155-4.234 0 0 1.344-0.43 4.401 1.64 1.276-0.355 2.645-0.532 4.005-0.539 1.359 0.006 2.729 0.184 4.008 0.539 3.054-2.070 4.395-1.64 4.395-1.64 0.871 2.204 0.323 3.831 0.157 4.234 1.026 1.12 1.647 2.548 1.647 4.295 0 6.145-3.743 7.498-7.306 7.895 0.574 0.497 1.085 1.47 1.085 2.963 0 2.141-0.019 3.864-0.019 4.391 0 0.426 0.288 0.925 1.099 0.768 6.354-2.118 10.933-8.113 10.933-15.18 0-8.837-7.164-16-16-16z"></path></svg>
+    </a>
+    <img src="./assets/images/ravein.png" alt="RAVeN" id="ravenLogoFooter">
+    <div class="footer-center">
+        <p>Lumine is based on Debian.</p>
+        <p>Built by RAVeN. Follow him on <a href="https://www.reddit.com/user/Dawg_yt1244" target="_blank">Reddit</a>.</p>
+		<address style="font-style: normal;">
+            Bugs or Contact? <a href="mailto:offraventhedeveloper@gmail.com">Click Here</a>
+        </address>
+		<p class="legal-text"><small>Linux® is the registered trademark of Linus Torvalds</small></p>
+        <p class="legal-text"><small>© 2025 Lumine Project</small></p>
+    </div>
+</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const cards = document.querySelectorAll('.spec-card');
+        cards.forEach((card, index) => {
+            card.style.opacity = "0";
+            card.style.transform = "translateY(30px)";
+            setTimeout(() => {
+                card.style.transition = "all 0.8s cubic-bezier(0.16, 1, 0.3, 1)";
+                card.style.opacity = "1";
+                card.style.transform = "translateY(0)";
+            }, 150 * index);
+        });
+    });
+</script>
+
+</body>
+</html>

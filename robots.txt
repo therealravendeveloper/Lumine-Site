@@ -1,2 +1,3 @@
 User-agent: *
 Allow: /
+Sitemap: https://therealravendeveloper.github.io/Lumine-Site/sitemap.xml
